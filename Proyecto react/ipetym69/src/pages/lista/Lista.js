@@ -1,12 +1,16 @@
 import './lista.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { MDBDataTable } from 'mdbreact';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 function Lista() {
 
     const [docentes, setDocentes] = useState([]);
+
+    useEffect(() => {
+        buscarDocentes();
+    },[]);
 
     const buscarDocentes = async () => {
 
