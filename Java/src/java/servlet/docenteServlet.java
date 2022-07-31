@@ -87,8 +87,7 @@ public class docenteServlet extends HttpServlet {
 
             ArrayList<Docente> docentes = conexionDocente.listarDocente();
 
-            json += gson.toJson(docentes);
-            json += "";
+            json = gson.toJson(docentes);
             out.print(json);
 
         } catch (SQLException ex) {
