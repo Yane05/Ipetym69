@@ -2,6 +2,7 @@ import './lista.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { MDBDataTable } from 'mdbreact';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 
 function Lista() {
@@ -10,56 +11,48 @@ function Lista() {
 
     useEffect(() => {
         buscarDocentes();
-    },[]);
+    }, []);
 
-    const buscarDocentes = async () => {
-
-    let respuesta = await fetch ("http://localhost:8080/Ipetym69/docenteServlet", {
-        "method": 'GET',
-        "headers": {
-            "Accept": 'application/json',
-            "Content-Type": 'application/json'
-        }})
-    let json = respuesta.json();
-    setDocentes(json);
+    const buscarDocentes = () => {
+        axios.get('http://localhost:8080/Ipetym69/docenteServlet')
+            .then(response => {
+                setDocentes(response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            })
     }
-
     const datos =
     {
         columns: [
             {
-                label: 'Docente',
-                field: 'docente',
+                label: 'Nombre',
+                field: 'nombre',
                 sort: 'asc'
             },
             {
-                label: 'Materia',
-                field: 'materia',
+                label: 'Apellido',
+                field: 'apellido',
                 sort: 'asc'
             },
             {
-                label: 'Curso',
-                field: 'curso',
+                label: 'Dni',
+                field: 'dni',
                 sort: 'asc'
             },
             {
-                label: 'División',
-                field: 'division',
+                label: 'Telefono',
+                field: 'telefono',
                 sort: 'asc'
             },
             {
-                label: 'Día',
-                field: 'dia',
+                label: 'Email',
+                field: 'email',
                 sort: 'asc'
             },
             {
-                label: 'Horario',
-                field: 'horario',
-                sort: 'asc'
-            },
-            {
-                label: 'Turno',
-                field: 'turno',
+                label: 'Legajo',
+                field: 'legajo',
                 sort: 'asc'
             }
         ],
@@ -69,17 +62,17 @@ function Lista() {
     return (
         <div className="lista">
             <h1 className='titulo'>Escuela IPETYM N°69</h1>
-            
-                <button className="button"><a className='link' href="">Nuevo Docente</a></button>
-                <button className="button"><a className='link' href="">Nueva Materia</a></button>
-                <br /><br />
 
-                <MDBDataTable
-                    striped
-                    bordered
-                    data={datos}
-                />
-       
+            <button className="button"><a className='link' href="">Nuevo Docente</a></button>
+            <button className="button"><a className='link' href="">Nueva Materia</a></button>
+            <br /><br />
+
+            <MDBDataTable
+                striped
+                bordered
+                data={datos}
+            />
+
         </div>
     );
 }

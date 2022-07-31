@@ -73,53 +73,54 @@ public class docenteServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+        response.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, "
+                + "X-Requested-With, Content-Type, Accept");
+        response.addHeader("Access-Control-Max-Age", "1728000");
         String json = "";
-            try {
-                GsonBuilder builder = new GsonBuilder();
-                builder.setPrettyPrinting();
-                Gson gson = builder.create();
-                DocenteEntity conexionDocente = new DocenteEntity();
+        try (PrintWriter out = response.getWriter()) {
+            GsonBuilder builder = new GsonBuilder();
+            builder.setPrettyPrinting();
+            Gson gson = builder.create();
+            DocenteEntity conexionDocente = new DocenteEntity();
 
-                ArrayList<Docente> docentes = conexionDocente.listarDocente();
+            ArrayList<Docente> docentes = conexionDocente.listarDocente();
 
-                json = gson.toJson(docentes);
+            json += gson.toJson(docentes);
+            json += "";
+            out.print(json);
 
-            } catch (SQLException ex) {
-                Logger.getLogger(docenteServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JsonIOException err) {
-                System.out.println("Exception : " + err.toString());
-            }
-            try (PrintWriter out = response.getWriter()) {
-                out.print(json);
-            }
+        } catch (SQLException ex) {
+            Logger.getLogger(docenteServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JsonIOException err) {
+            System.out.println("Exception : " + err.toString());
         }
-
-        /**
-         * Handles the HTTP <code>POST</code> method.
-         *
-         * @param request servlet request
-         * @param response servlet response
-         * @throws ServletException if a servlet-specific error occurs
-         * @throws IOException if an I/O error occurs
-         */
-        @Override
-        protected void doPost
-        (HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-            processRequest(request, response);
-        }
-
-        /**
-         * Returns a short description of the servlet.
-         *
-         * @return a String containing servlet description
-         */
-        @Override
-        public String getServletInfo
-        
-            () {
-        return "Short description";
-        }// </editor-fold>
 
     }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}
