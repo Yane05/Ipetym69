@@ -21,7 +21,6 @@ function Lista() {
                 console.log(e);
             })
     }
-
     const datos =
     {
         columns: [
