@@ -18,10 +18,11 @@ function Lista() {
             .then(response => {
                 setDocentes(response.data);
             })
-            .catch(e => {
-                console.log(e);
+            .catch(error => {
+                console.log(error);
             })
     }
+
     const datos =
     {
         columns: [
