@@ -2,7 +2,7 @@ import './lista.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { MDBDataTable } from 'mdbreact';
 import { useEffect, useState } from 'react';
-
+import axios from 'axios';
 
 function Lista() {
 
@@ -12,20 +12,14 @@ function Lista() {
         buscarDocentes();
     }, []);
 
-    const buscarDocentes = async () => {
-        let url = 'http://localhost:8080/Ipetym69/docenteServlet';
-        let respuesta = await fetch(url, {
-            "method": 'GET',
-            "headers": {
-                "Accept": 'application/json',
-                "Content-Type": 'application/json' 
-            }
-        })
-
-        console.log(respuesta);
-        let json = respuesta.json();
-        setDocentes(json);
-
+    const buscarDocentes = () => {
+        axios.get('http://localhost:8080/Ipetym69/docenteServlet')
+            .then(response => {
+                setDocentes(response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            })
     }
 
     const datos =
