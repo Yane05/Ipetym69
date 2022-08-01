@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package entity;
 
 import baseDeDatos.Conectar;
@@ -15,10 +11,6 @@ import escuela.Docente;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
-/**
- *
- * @author Paula
- */
 public class DocenteEntity {
 
     private Conectar conectar = new Conectar();
