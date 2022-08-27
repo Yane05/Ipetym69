@@ -1,26 +1,24 @@
 package servlet;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
-import entity.DocenteEntity;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import entity.LoginEntity;
-import escuela.Docente;
 import escuela.Usuario;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
-public class LoginServlet extends HttpServlet {
+public class loginServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,7 +46,13 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+        response.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin,"
+                + "X-Requested-With, Content-Type, Accept");
+        response.addHeader("Access-Control-Max-Age", "1728000");
+        //response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("application/json");
     }
 
     /**
@@ -67,34 +71,57 @@ public class LoginServlet extends HttpServlet {
         response.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin,"
                 + "X-Requested-With, Content-Type, Accept");
         response.addHeader("Access-Control-Max-Age", "1728000");
-        response.setContentType("text/html;charset=UTF-8");
+        //response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("application/json");
 
-        String nombre = request.getParameter("nombreUsuario");
-        String contrasenia = request.getParameter("contraseniaUsuario");
+        Gson gson = new Gson();
+        String json = "[" + readJSONStringFromRequest(request) + "]";
+        System.out.println(json);
+
+        JsonParser parser = new JsonParser();
+        JsonArray gsonArr = parser.parse(json).getAsJsonArray();
+
+        String nombre = "";
+        String contrasenia = "";
+        
+        for (JsonElement obj : gsonArr) {
+            JsonObject gsonObj = obj.getAsJsonObject();
+            nombre = gsonObj.get("nombreUsuario").getAsString();
+            contrasenia = gsonObj.get("contraseniaUsuario").getAsString();
+        }
 
         Usuario usuarioALoguear = new Usuario(nombre, contrasenia);
         LoginEntity login = new LoginEntity();
         Usuario usuario = new Usuario();
 
-        try (PrintWriter out = response.getWriter()) {
-            String json = "";
-            GsonBuilder builder = new GsonBuilder();
-            builder.setPrettyPrinting();
-            Gson gson = builder.create();
-
+        try {
             usuario = login.login(usuarioALoguear);
 
             if (usuarioALoguear.getNombre().equals(usuario.getNombre())
                     && usuarioALoguear.getContrasenia().equals(usuario.getContrasenia())) {
-
-                json = gson.toJson(usuario);
-                out.print(json);
+                response.setStatus(HttpServletResponse.SC_OK);
+                //response.sendRedirect("/docentes");
+            } else {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                //  response.sendRedirect("/");
             }
         } catch (SQLException ex) {
             Logger.getLogger(docenteServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JsonIOException err) {
-            System.out.println("Exception : " + err.toString());
         }
+    }
+
+    private String readJSONStringFromRequest(HttpServletRequest request) throws IOException {
+        BufferedReader reader = request.getReader();
+        StringBuilder sb = new StringBuilder();
+        String line = reader.readLine();
+        while (line != null) {
+            sb.append(line + "\n");
+            line = reader.readLine();
+        }
+        reader.close();
+        String data = sb.toString();
+
+        return data;
     }
 
     /**
