@@ -1,6 +1,5 @@
 package servlet;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,7 +9,6 @@ import escuela.Usuario;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -74,9 +72,7 @@ public class loginServlet extends HttpServlet {
         //response.setContentType("text/html;charset=UTF-8");
         response.setContentType("application/json");
 
-        Gson gson = new Gson();
         String json = "[" + readJSONStringFromRequest(request) + "]";
-        System.out.println(json);
 
         JsonParser parser = new JsonParser();
         JsonArray gsonArr = parser.parse(json).getAsJsonArray();

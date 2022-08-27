@@ -26,7 +26,7 @@ public class LoginEntity {
                         resultado.getString("contrasenia"));
             }
         } catch (SQLException e) {
-            System.out.println("Error al intentar la conexión" + e.getMessage());
+            System.out.println("Error al intentar la conexión " + e.getMessage());
         }
         return respuestaUsuario;
     }
