@@ -18,25 +18,15 @@ function Login() {
     }
 
     const datosForm = { nombreUsuario: datos.nombreUsuario, contraseniaUsuario: datos.contraseniaUsuario };
+    
     let axiosConfig = {
-        'Content-Type': 'application/json;charset=UTF-8',
-        /*'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Allow-Methods': '*'*/
-
+        'Content-Type': 'application/json;charset=UTF-8'
     };
     const url = 'http://localhost:8080/Ipetym69/loginServlet';
 
     const enviarDatos = (event) => {
         event.preventDefault()
         axios.post(url, datosForm, { "headers": axiosConfig })
-            /* { headers: {
-                 //'Accept': 'application/json',
-                 'Content-Type': 'application/x-www-form-urlencoded',
-               "Access-Control-Allow-Origin": "*",
-               "Access-Control-Allow-Headers": "*",
-               "Access-Control-Allow-Methods": "*"
-         }})*/
             .then(response => {
                 if (response.status === 200) {
                     window.location = "/docentes"
