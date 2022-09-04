@@ -9,7 +9,7 @@ function Docente() {
         dni: '',
         telefono: '',
         email: '',
-        legalo: ''
+        legajo: ''
     })
 
     const handleInputChange = (event) => {

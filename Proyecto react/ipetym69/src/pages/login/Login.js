@@ -1,5 +1,5 @@
 import './login.css';
-import useState from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
 function Login() {
@@ -27,15 +27,17 @@ function Login() {
     const enviarDatos = (event) => {
         event.preventDefault()
         axios.post(url, datosForm, { "headers": axiosConfig })
-            .then(response => {
-                if (response.status === 200) {
+            .then(() => {
                     window.location = "/docentes"
-                } else {
-                    window.location = "/"
-                }
             })
             .catch(error => {
+                console.log(error)
+                if (error.code == 'ERR_BAD_REQUEST') {
+                    alert('Usuario o contraseña incorrectos')
+                    window.location = "/"
+                } else {
                 alert(error);
+                }
             })
     }
 
