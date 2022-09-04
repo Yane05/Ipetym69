@@ -8,9 +8,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import entity.DocenteEntity;
 import escuela.Docente;
+import java.io.BufferedReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -110,9 +115,54 @@ public class docenteServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-    }
+        
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+        response.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin,"
+                + "X-Requested-With, Content-Type, Accept");
+        response.addHeader("Access-Control-Max-Age", "1728000");
+        //response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("application/json");
 
+        String json = "[" + readJSONStringFromRequest(request) + "]";
+
+        JsonParser parser = new JsonParser();
+        JsonArray gsonArr = parser.parse(json).getAsJsonArray();
+
+        String nombre = "";
+        String apellido = "";
+        int dni = 0 ;
+        int telefono = 0 ;
+        String email = "";
+        String legajo = "";
+        
+        for (JsonElement obj : gsonArr) {
+            JsonObject gsonObj = obj.getAsJsonObject();
+            nombre = gsonObj.get("nombre").getAsString();
+            apellido = gsonObj.get("apellido").getAsString();
+            dni = gsonObj.get("dni").getAsInt();
+            telefono = gsonObj.get("telefono").getAsInt();
+            email = gsonObj.get("email").getAsString();
+            legajo = gsonObj.get("legajo").getAsString();
+        }
+
+        Docente nuevoDocente = new Docente(nombre, apellido,dni,telefono,email,legajo);
+        DocenteEntity conexionDocente = new DocenteEntity();
+        conexionDocente.insertarDocente(nuevoDocente);
+    }
+    private String readJSONStringFromRequest(HttpServletRequest request) throws IOException {
+        BufferedReader reader = request.getReader();
+        StringBuilder sb = new StringBuilder();
+        String line = reader.readLine();
+        while (line != null) {
+            sb.append(line + "\n");
+            line = reader.readLine();
+        }
+        reader.close();
+        String data = sb.toString();
+
+        return data;
+    }
     /**
      * Returns a short description of the servlet.
      *

@@ -39,6 +39,7 @@ function Docente() {
         event.preventDefault()
         axios.post(url, datosForm, { "headers": axiosConfig })
             .then(() => {
+                alert('Docente agregado con éxito')
                 window.location = "/docentes"
             })
             .catch(error => {

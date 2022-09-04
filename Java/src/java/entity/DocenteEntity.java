@@ -64,7 +64,7 @@ public class DocenteEntity {
 
             /*creamos un objeto result set que es como una tabla virtual en memoria
          con el resultado de la consulta*/
-            ResultSet resultado = statement.executeQuery("SELECT * FROM docente");
+            /*ResultSet resultado = statement.executeQuery("SELECT * FROM docente");
 
             while (resultado.next()) {
                 System.out.println(resultado.getLong("id") + " "
@@ -74,7 +74,7 @@ public class DocenteEntity {
                         + resultado.getInt("telefono") + " "
                         + resultado.getString("email") + " "
                         + resultado.getString("legajo"));
-            }
+            }*/
         } catch (Exception e) {
             System.out.println("Error al intentar insertar db" + e.getMessage());
         }
