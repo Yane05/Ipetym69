@@ -3,10 +3,53 @@ import './formularios.css';
 //import axios from 'axios';
 
 function Docente() {
+    const [docente, setDocente] = useState({
+        nombre: '',
+        apellido: '',
+        dni: '',
+        telefono: '',
+        email: '',
+        legalo: ''
+    })
+
+    const handleInputChange = (event) => {
+        console.log(event.target.name)
+        console.log(event.target.value)
+        setDocente({
+            ...docente,
+            [event.target.name]: event.target.value
+        })
+    }
+
+    const datosForm = { 
+        nombre: docente.nombre, 
+        apellido: docente.apellido,
+        dni: docente.dni,
+        telefono: docente.telefono,
+        email: docente.email,
+        legajo: docente.legajo
+    };
+    
+    let axiosConfig = {
+        'Content-Type': 'application/json;charset=UTF-8'
+    };
+    const url = 'http://localhost:8080/Ipetym69/docenteServlet';
+
+    const enviarDatos = (event) => {
+        event.preventDefault()
+        axios.post(url, datosForm, { "headers": axiosConfig })
+            .then(() => {
+                window.location = "/docentes"
+            })
+            .catch(error => {
+                alert(error);
+            })
+    }
+
     return (
         <div>
             <a href="lista.html" style={{ float: 'left' }}>Volver</a>
-            <form action="guardar">
+            <form onSubmit={enviarDatos}>
                 <div className="center">
                     <table>
                         <tbody>
@@ -24,30 +67,30 @@ function Docente() {
                             <tr>
                                 <td colSpan={3}>
                                     <div>
-                                        <input type="text" placeholder="Nombre" name="nombreDocente" />
+                                        <input type="text" placeholder="Nombre" name="nombre" onChange={handleInputChange}/>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td colSpan={3}>
                                     <div>
-                                        <input type="text" placeholder="Apellido" name="apellido" />
+                                        <input type="text" placeholder="Apellido" name="apellido" onChange={handleInputChange}/>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td colSpan={3}>
                                     <div>
-                                        <input type="text" placeholder="DNI" name="dni" style={{ float: "left", width: "42%" }} />
-                                        <input type="text" placeholder="Teléfono" name="telefono" style={{ float: "left", width: "42%" }} />
+                                        <input type="text" placeholder="DNI" name="dni" onChange={handleInputChange} style={{ float: "left", width: "42%" }} />
+                                        <input type="text" placeholder="Teléfono" name="telefono" onChange={handleInputChange} style={{ float: "left", width: "42%" }} />
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td colSpan={3}>
                                     <div>
-                                        <input type="text" placeholder="Email" name="Email" style={{ float: "left", width: "56%" }} />
-                                        <input type="text" placeholder="Legajo" name="legajo" style={{ float: "left", width: "28%" }} />
+                                        <input type="text" placeholder="Email" name="email" onChange={handleInputChange} style={{ float: "left", width: "56%" }} />
+                                        <input type="text" placeholder="Legajo" name="legajo" onChange={handleInputChange} style={{ float: "left", width: "28%" }} />
                                     </div>
                                 </td>
                             </tr>
